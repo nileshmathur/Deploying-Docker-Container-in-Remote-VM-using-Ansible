@@ -1,0 +1,33 @@
+- hosts: docker
+  gather_facts: no
+  tasks:
+          - name: Configure yum for Docker
+            yum_repository:
+                    name: "docker"
+                    baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
+                    description: Docker Repo
+                    gpgcheck: no
+          - name: Install Docker
+            command: "yum install docker -ce -y --nobest"
+          - name: Start Docker Service
+            service:
+                    name: "docker"
+                    state: started
+                    enabled: yes
+          - name: Install Software for Pip3
+            package:
+                    name: "python36"
+                    state: present
+          - name: Install Pip Docker Library
+            pip:
+                    name: "docker-py"
+          - name: Pull Docker Image
+            docker_image:
+                    name: ubuntu:14.04
+                    source: pull
+          - name: Run Container
+            docker_container:
+                    name: myos1
+                    image: ubuntu:14.04
+
+ 
